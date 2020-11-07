@@ -686,7 +686,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         <label><?php echo $this->lang->line('quantity'); ?></label>
                                         <small class="req"> *</small> 
                                         <input type="number" name="transfer_qty" placeholder="Transfer Qty to Pharmacist Stock" class="form-control">
-                                        <input type="number" name="medicine_id" id="test" class="form-control">
+                                        <input type="hidden" name="medicine_id" id="test" class="form-control">
                                         <span class="text-danger"><?php echo form_error('packing_qty'); ?></span>
                                     </div>
                                 </div> 
@@ -722,11 +722,11 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                         <form id="formstockpending"  accept-charset="utf-8"  method="post" class="ptt10" >
                             <!-- <input type="hidden" name="pharmacy_id" id="pharm_id" > -->
                             <div class="row">
-                                <!-- <div class="col-sm-6">
+                                <div class="col-sm-6">
                                     <div class="form-group">
                                         <label><?php echo $this->lang->line('pending') . " " . $this->lang->line('quantity'); ?></label>
 
-                                        <input type="hidden" name="pharmacy_id" id="test1" class="form-control">
+                                        <input type="hidden" name="medicine_id" id="test1" class="form-control">
                                         <input type="number" readonly="" name="pending_qty" id="pending_qty" class="form-control">
                                         <span class="text-danger"><?php echo form_error('packing_qty'); ?></span>
                                     </div>
@@ -737,14 +737,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         <input type="text" readonly="" name="pending_status" id="pending_status" class="form-control">
 
                                     </div>
-                                </div>  -->
-
-                                <div id="pendingdata"></div>
-
-
-
+                                </div> 
                             </div>  
-
                     </div><!--./col-md-12-->       
 
                 </div><!--./row--> 
@@ -752,7 +746,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
             </div>
             <div class="box-footer">
                 <div class="pull-right">
-                    <!-- <button type="submit" id="formstockpendingbtn" data-loading-text="<?php echo $this->lang->line('processing') ?>" class="btn btn-info pull-right"><?php echo $this->lang->line('approve'); ?></button> -->
+                    <button type="submit" id="formstockpendingbtn" data-loading-text="<?php echo $this->lang->line('processing') ?>" class="btn btn-info pull-right"><?php echo $this->lang->line('approve'); ?></button>
                     </form>  
                 </div>
             </div>
@@ -1104,29 +1098,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                 });
             }
 
-            function pendingstock(id){
-                $.ajax({
-                    url: '<?php echo base_url(); ?>admin/pharmacy/getDetails',
-                    type: "POST",
-                    data: {pharmacy_id: id},
-                    dataType: 'json',
-                    success: function (data) {
-                        $.ajax({
-                            url: '<?php echo base_url(); ?>admin/pharmacy/getMedicineBatchPending',
-                            type: "POST",
-                            data: {pharmacy_id: id},
-                            success: function (data) {
-                                $('#pendingdata').html(data);
-                            },
-                        });
-
-                        // $("#test1").val(id);
-                        getbatchnolist(id);
-                        holdModal('stockPendingModal');
-                    },
-                });
-            }
-
+          
             function viewDetail(id) {
                 // alert(id);
                 $.ajax({
@@ -1140,6 +1112,10 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                             type: "POST",
                             data: {pharmacy_id: id},
                             success: function (data) {
+
+                                // $("#pending_qty").val(data.temp_qty);
+                                // $("#pending_status").val(data.status);
+
                                 $('#tabledata').html(data);
                             },
                         });
@@ -1245,12 +1221,15 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                 holdModal('stockTransferModal');
             }
 
-            // function pendingstock(id) {
-            //     $("#test1").val(id);
+            function pendingstock(id,temp_qty, status) {
+                $("#test1").val(id);
 
-            //     getbatchnolist(id);
-            //     holdModal('stockPendingModal');
-            // }
+                $("#pending_qty").val(temp_qty);
+                $("#pending_status").val(status);
+
+                getbatchnolist(id);
+                holdModal('stockPendingModal');
+            }
 
 
             function getbatchnolist(id, selectid = '') {
@@ -1262,8 +1241,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                     data: {'medicine': id},
                     dataType: 'json',
                     success: function (res) {
-                        $("#pending_qty").val(res[0].temp_qty);
-                        $("#pending_status").val(res[0].status);
+                        // $("#pending_qty").val(res[0].temp_qty);
+                        // $("#pending_status").val(res[0].status);
                         console.log(res);
                         $.each(res, function (i, obj)
                         {

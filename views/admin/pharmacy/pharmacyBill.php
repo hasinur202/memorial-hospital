@@ -173,10 +173,6 @@ $genderList = $this->customlib->getGender();
                                 </div> -->
 
 
-
-
-
-
                                 <div class="col-md-12" style="clear:both;">
                                     <div class="">
                                         <table class="table table-striped table-bordered table-hover" id="tableID">
@@ -264,8 +260,10 @@ $genderList = $this->customlib->getGender();
                                      </div>
                                    </div> -->
                                     <div class="row">  
+
                                         <div class="col-sm-6">
                                             <div class="row">
+
                                                 <div class="col-sm-12">  
                                                     <div class="row"> 
                                                         <div class="col-sm-6">
@@ -292,13 +290,22 @@ $genderList = $this->customlib->getGender();
                                                                 <span class="text-danger"><?php echo form_error('refference'); ?></span>
                                                             </div>   
                                                         </div> 
-                                                        <div class="col-sm-6">    
-                                                            <div class="form-group">
-                                                                <label><?php echo $this->lang->line('doctor') . " " . $this->lang->line('name'); ?></label>
-                                                                <input name="doctor_name" id="doctname" type="text" class="form-control"/>
-                                                                <span class="text-danger"><?php echo form_error('doctor_name'); ?></span>
-                                                            </div>
-                                                        </div> 
+
+                                                    <div class="col-sm-6">   
+                                                        <div class="form-group">
+                                                        <label style="font-weight: bold;"><?php echo $this->lang->line('customer') . " " . $this->lang->line('type'); ?><small class="req" style="color:red;"> *</small>
+                                                        </label>
+                                                        <select style="width: 100%" class="form-control select2" name='customer_type'>
+                                                            <option value=""><?php echo $this->lang->line('select') . " " . $this->lang->line('patient'). " " . $this->lang->line('type') ?></option>
+                                            
+                                                            <option value="OPD">OPD</option>
+                                                            <option value="IPD">IPD</option>      
+                                                        </select> 
+                                                    </div>
+                                                    </div>
+
+                                                    <input name="doctor_name" id="doctname" type="hidden" class="form-control"/>
+
                                                     </div>  
                                                 </div>  
                                                 <div class="col-sm-12">
@@ -306,7 +313,9 @@ $genderList = $this->customlib->getGender();
                                                         <label><?php echo $this->lang->line('note'); ?></label>
                                                         <textarea name="note" rows="3" id="note" class="form-control"></textarea>
                                                     </div> 
-                                                </div>  
+                                                </div> 
+
+
                                             </div> 
                                         </div><!--./col-sm-6-->
 

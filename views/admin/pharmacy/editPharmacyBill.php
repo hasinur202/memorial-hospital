@@ -62,6 +62,26 @@ $genderList = $this->customlib->getGender();
                     </div>
                 </div> 
 
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label for="exampleInputFile">
+                            <?php echo $this->lang->line('patient') . " " . $this->lang->line('type'); ?></label>
+                       
+                            <select name='customer_type' style="width:100%;" class="form-control select2" style="width:100%" >
+                                <option disabled selected="selected" value=""><?php echo $result['customer_type'] ?></option>
+                                <option value="OPD">OPD</option>
+                                <option value="IPD">IPD</option>  
+
+                            </select>
+                       
+                        <span class="text-danger"><?php echo form_error('refference'); ?></span>
+                    </div>
+                </div>
+
+
+
+
+
                 <script type="text/javascript">
 
                     function get_PatienteditDetails(id) {
@@ -110,6 +130,7 @@ $genderList = $this->customlib->getGender();
                                   
                                     if (newrow != '') {
                                         $('#sale_price_edit' + id).val(data.sale_rate);
+                                        $('#purchase_price_edit' + id).val(data.purchase_rate);
                                     }
                                     // $('#sale_price_edit' + id).val(data.sale_price);
                                 }
@@ -317,16 +338,25 @@ $genderList = $this->customlib->getGender();
                                     <td class="text-right">
                                         <input type="text" name="sale_price[]" onchange="multiply(<?php echo $i ?>)" id="sale_price_edit<?php echo $i ?>" value="<?php echo $value['sale_price']; ?>" placeholder="Sale Price" class="form-control text-right" />
                                         <span class="text-danger"><?php echo form_error('sale_price[]'); ?></span>
+
+
+                                         <input type="hidden" value="<?php echo $value['purchase_price']; ?>" name="purchase_price[]" onchange="multiply(0)" id="purchase_price_edit<?php echo $i ?>" placeholder="" class="form-control text-right">
+                                        <input type="hidden" value="<?php echo $value['total_purchase']; ?>" name="total_purchase[]" id="total_purchase_edit<?php echo $i ?>" placeholder="" class="form-control text-right">
+
+
                                     </td>
                                     <td class="text-right">
                                         <input type="text" name="amount[]" id="amount_edit<?php echo $i ?>" placeholder="Amount" class="form-control text-right" value="<?php echo $value['amount']; ?>"/>
                                         <span class="text-danger"><?php echo form_error('amount[]'); ?></span>
                                     </td>
-                                    <?php if ($i != 0) { ?>
+
+                             <!--        <?php if ($i != 0) { ?>
                                         <td><button type='button' onclick="delete_row('<?php echo $i ?>')" class='closebtn'><i class='fa fa-remove'></i></button></td>
                                 <?php } else { ?>
                                         <td><button type="button" onclick="editMore()" style="color:#2196f3" class="closebtn"><i class="fa fa-plus"></i></button></td>
-                                <?php } ?>
+                                <?php } ?> -->
+
+
                                 </tr>
     <?php
     $i++;
@@ -374,6 +404,9 @@ $genderList = $this->customlib->getGender();
                                 <td class="text-right ipdbilltable" width="40%" colspan="2"><input type="text" placeholder="Net Amount" value="<?php echo $result["net_amount"] ?>" name="net_amount" id="editnet_amount" style="width: 30%; float: right" class="form-control"/></td>
                             </tr>
 
+                          
+                                <input type="hidden" placeholder="Net Amount" value="<?php echo $result["net_purchase"] ?>" name="net_purchase" id="editnet_purchase" style="width: 30%; float: right" class="form-control"/>
+
 
                         </table>
 
@@ -413,9 +446,15 @@ $genderList = $this->customlib->getGender();
         }
         var sale_price = $('#sale_price_edit' + id).val();
         var amount = quantity * sale_price;
-
-
         $('#amount_edit' + id).val(amount);
+
+
+        //me
+        var purchase_price = $('#purchase_price_edit' + id).val();
+        var total_purchase = quantity * purchase_price;
+        $('#total_purchase_edit' + id).val(total_purchase)
+
+
     }
 
     $(function () {
@@ -432,23 +471,25 @@ $genderList = $this->customlib->getGender();
         autoclose: true
     });
 
-    function editMore() {
-        var table = document.getElementById("edittableID");
-        var table_len = (table.rows.length);
-        var id = parseInt(table_len);
-        var div = "<td><select class='form-control' name='medicine_category_id[]' onchange='getmedicine_edit_name(this.value," + id + ")'><option value='<?php echo set_value('medicine_category_id'); ?>'><?php echo $this->lang->line('select') ?></option><?php foreach ($medicineCategory as $dkey => $dvalue) { ?><option value='<?php echo $dvalue["id"]; ?>'><?php echo $dvalue["medicine_category"] ?></option><?php } ?></select></td><td><select class='form-control select2' name='medicine_name[]' onchange='geteditbatchnolist(this.value," + id + ")' id='medicine_edit_name" + id + "' ><option value='<?php echo set_value('medicine_name'); ?>'><?php echo $this->lang->line('select') ?></option></select></td><td><select name='batch_no[]' onchange='getneweditExpire(" + id + ")' id='batch_edit_no" + id + "'  class='form-control'><option></option></select></td><td><input type='text' id='edit_expire_date" + id + "' readonly name='expire_date[]' class='form-control'></td><td><div class='input-group'><input type='text' name='quantity[]' onchange='multiply(" + id + ")' onfocus='geteditQuantity(" + id + ")' id='quantity_edit" + id + "' class='form-control text-right'><span class='input-group-addon text-danger'  id='totaleditqty" + id + "'>&nbsp;&nbsp;</span></div><input type='hidden' name='available_quantity[]' id='available_edit_quantity" + id + "'><input type=hidden class=form-control value='0' name='bill_detail_id[]'  /><input type='hidden' name='medicine_batch_id[]' id='medicine_batch_id" + id + "'></td><td> <input type='text' name='sale_price[]' onchange='multiply(" + id + ")' id='sale_price_edit" + id + "'  class='form-control text-right'></td><td><input type='text' name='amount[]' id='amount_edit" + id + "'  class='form-control text-right'></td>";
+    // function editMore() {
+    //     var table = document.getElementById("edittableID");
+    //     var table_len = (table.rows.length);
+    //     var id = parseInt(table_len);
+    //     var div = "<td><select class='form-control' name='medicine_category_id[]' onchange='getmedicine_edit_name(this.value," + id + ")'><option value='<?php echo set_value('medicine_category_id'); ?>'><?php echo $this->lang->line('select') ?></option><?php foreach ($medicineCategory as $dkey => $dvalue) { ?><option value='<?php echo $dvalue["id"]; ?>'><?php echo $dvalue["medicine_category"] ?></option><?php } ?></select></td><td><select class='form-control select2' name='medicine_name[]' onchange='geteditbatchnolist(this.value," + id + ")' id='medicine_edit_name" + id + "' ><option value='<?php echo set_value('medicine_name'); ?>'><?php echo $this->lang->line('select') ?></option></select></td><td><select name='batch_no[]' onchange='getneweditExpire(" + id + ")' id='batch_edit_no" + id + "'  class='form-control'><option></option></select></td><td><input type='text' id='edit_expire_date" + id + "' readonly name='expire_date[]' class='form-control'></td><td><div class='input-group'><input type='text' name='quantity[]' onchange='multiply(" + id + ")' onfocus='geteditQuantity(" + id + ")' id='quantity_edit" + id + "' class='form-control text-right'><span class='input-group-addon text-danger'  id='totaleditqty" + id + "'>&nbsp;&nbsp;</span></div><input type='hidden' name='available_quantity[]' id='available_edit_quantity" + id + "'><input type=hidden class=form-control value='0' name='bill_detail_id[]'  /><input type='hidden' name='medicine_batch_id[]' id='medicine_batch_id" + id + "'></td><td> <input type='text' name='sale_price[]' onchange='multiply(" + id + ")' id='sale_price_edit" + id + "'  class='form-control text-right'></td><td><input type='text' name='amount[]' id='amount_edit" + id + "'  class='form-control text-right'></td><td> <input type='text' name='purchase_price[]' onchange='multiply(" + id + ")' id='purchase_price_edit" + id + "'  class='form-control text-right'></td><td><input type='text' name='total_purchase[]' id='total_purchase_edit" + id + "'  class='form-control text-right'></td>";
 
-        var row = table.insertRow(table_len).outerHTML = "<tr id='row" + id + "'>" + div + "<td><button type='button' onclick='delete_row(" + id + ")' class='closebtn'><i class='fa fa-remove'></i></button></td></tr>";
+    //     var row = table.insertRow(table_len).outerHTML = "<tr id='row" + id + "'>" + div + "<td><button type='button' onclick='delete_row(" + id + ")' class='closebtn'><i class='fa fa-remove'></i></button></td></tr>";
 
-        var expire_date = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['d' => 'DD', 'm' => 'MM', 'Y' => 'YYYY',]) ?>';
-        $('.expires_date').datepicker({
-            format: "M/yyyy",
-            viewMode: "months",
-            minViewMode: "months",
-            autoclose: true,
-        });
-        $('.select2').select2();
-    }
+    //     var expire_date = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['d' => 'DD', 'm' => 'MM', 'Y' => 'YYYY',]) ?>';
+    //     $('.expires_date').datepicker({
+    //         format: "M/yyyy",
+    //         viewMode: "months",
+    //         minViewMode: "months",
+    //         autoclose: true,
+    //     });
+    //     $('.select2').select2();
+    // }
+
+
     function addEditTotal() {
         var total = 0;
         var sale_price = document.getElementsByName('amount[]');
@@ -461,6 +502,20 @@ $genderList = $this->customlib->getGender();
             }
             total += parseFloat(inpvalue);
         }
+
+        //me
+        var totalPurchase = 0;
+        var purchase_price = document.getElementsByName('total_purchase[]');
+        for (var i = 0; i < purchase_price.length; i++) {
+            var inp = purchase_price[i];
+            if (inp.value == '') {
+                var inpvalue = 0;
+            } else {
+                var inpvalue = inp.value;
+            }
+            totalPurchase += parseFloat(inpvalue);
+        }
+
 
         var tax_percent = $("#edittax_percent").val();
         var discount_percent = $("#editdiscount_percent").val();
@@ -485,9 +540,18 @@ $genderList = $this->customlib->getGender();
         $("#edittotal").val(total.toFixed(2));
         var net_amount = parseFloat(total) + parseFloat(tax) - parseFloat(discount);
 
+
+         $("#totalPurchase").val(totalPurchase.toFixed(2));
+        //me
+        var net_purchase = parseFloat(totalPurchase);
+        $("#editnet_purchase").val(net_purchase);
+
+
+
         $("#editnet_amount").val(net_amount.toFixed(2));
         var patient_id = $("#addeditpatient_id").val();
         $("#editbillpatientid").val(patient_id);
+
         var editdate = $("#editdate").val();
         $("#editbilldate").val(editdate);
         $("#editbillsave").show();

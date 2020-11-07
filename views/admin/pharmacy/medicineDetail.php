@@ -61,10 +61,16 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                <a href='#' class='btn btn-default btn-xs' onclick='stocktransfer("<?php echo $detail->id ?>")' data-toggle='tooltip' title="<?php echo $this->lang->line('pharmacy'); ?>" > <i class='fas fa-plus-square'></i> 
                                </a>
 
+
+                       <?php  if ($this->rbac->hasPrivilege('staff', 'can_add')) {
+                              if($detail->status == 'pending'){ ?>
+
+                               <a href='#' class='btn btn-default btn-xs' onclick='pendingstock("<?php echo $detail->id ?>","<?php echo $detail->temp_qty ?>","<?php echo $detail->status ?>")' data-toggle='tooltip' title='<?php echo $this->lang->line('status'); ?>' > <i class='fas fa-check'></i> </a>
+
+                      <?php }    } ?>
+
+
                                 </td>
-
-
-
 
                             </tr>
                             <?php

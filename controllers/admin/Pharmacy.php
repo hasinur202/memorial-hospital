@@ -155,15 +155,16 @@ public function dt_search(){
         $action="<div class='rowoptionview'>";  
         $action.="<a href='#' onclick='viewDetail(".$result_value->id.")' class='btn btn-default btn-xs' data-toggle='tooltip' title='".$this->lang->line('show')."' ><i class='fa fa-reorder'></i></a>"; 
 
-        // if ($this->rbac->hasPrivilege('medicine_purchase', 'can_view')) {
-        //     $action.="<a href='#' class='btn btn-default btn-xs' onclick='stocktransfer(".$result_value->id.")' data-toggle='tooltip' title='".$this->lang->line('add') . ' ' . $this->lang->line('to') . ' ' . $this->lang->line('pharmacy') . ' ' . $this->lang->line('stock')."' > <i class='fas fa-plus-square'></i> </a>";
-        // }
 
-    if ($this->rbac->hasPrivilege('staff', 'can_add')) {
-      if($result_value->status_p == 'pending'){
-            $action.="<a href='#' class='btn btn-default btn-xs' onclick='pendingstock(".$result_value->id.")' data-toggle='tooltip' title='".$this->lang->line('pending') . ' ' . $this->lang->line('status')."' > <i class='fas fa-check'></i> </a>";
-       } 
-    }
+    // if ($this->rbac->hasPrivilege('medicine_purchase', 'can_view')) {
+        //     $action.="<a href='#' class='btn btn-default btn-xs' onclick='stocktransfer(".$result_value->id.")' data-toggle='tooltip' title='".$this->lang->line('add') . ' ' . $this->lang->line('to') . ' ' . $this->lang->line('pharmacy') . ' ' . $this->lang->line('stock')."' > <i class='fas fa-plus-square'></i> </a>";
+    // }
+
+    // if ($this->rbac->hasPrivilege('staff', 'can_add')) {
+    //   if($result_value->status_p == 'pending'){
+    //         $action.="<a href='#' class='btn btn-default btn-xs' onclick='pendingstock(".$result_value->id.")' data-toggle='tooltip' title='".$this->lang->line('pending') . ' ' . $this->lang->line('status')."' > <i class='fas fa-check'></i> </a>";
+    //    } 
+    // }
 
     
         $action.="<a href='#' class='btn btn-default btn-xs' onclick='addbadstock(".$result_value->id.")' data-toggle='tooltip' title='".$this->lang->line('add') . ' ' . $this->lang->line('bad') . ' ' . $this->lang->line('stock')."' > <i class='fas fa-minus-square'></i> </a>";
@@ -743,6 +744,7 @@ echo json_encode($json_data);  // send data as json format
         $this->form_validation->set_rules('medicine_name[]', $this->lang->line('medicine') . " " . $this->lang->line('name'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('batch_no[]', $this->lang->line('batch') . " " . $this->lang->line('no'), 'required');
 
+        $this->form_validation->set_rules('customer_type',  $this->lang->line('patient') . " " . $this->lang->line('type'), 'required');
 
         $this->form_validation->set_rules('quantity[]', $this->lang->line('quantity'), 'required|numeric');
         $this->form_validation->set_rules('sale_price[]', $this->lang->line('sale_price'), 'required|numeric');
@@ -757,6 +759,7 @@ echo json_encode($json_data);  // send data as json format
                 'medicine_name' => form_error('medicine_name[]'),
                 'batch_no' => form_error('batch_no[]'),
                 //'expire_date' => form_error('expire_date[]'),
+                'customer_type' => form_error('customer_type'),
                 'quantity' => form_error('quantity[]'),
                 'sale_price' => form_error('sale_price[]'),
                 'amount' => form_error('amount[]'),
@@ -781,6 +784,7 @@ echo json_encode($json_data);  // send data as json format
                 'date' => date('Y-m-d H:i:s', $this->customlib->datetostrtotime($bill_date)),
                 'patient_id' => $patient_id,
                 'customer_name' => $this->input->post('customer_name'),
+                'customer_type' => $this->input->post('customer_type'),
                 'doctor_name' => $this->input->post('doctor_name'),
                 'total' => $this->input->post('total'),
                 'discount' => $this->input->post('discount'),
@@ -803,6 +807,8 @@ echo json_encode($json_data);  // send data as json format
                 $total_quantity = $this->input->post('available_quantity');
                 $medicine_batch_details_id = $this->input->post('id');
                 $sale_price = $this->input->post('sale_price');
+                $purchase_price = $this->input->post('purchase_price');
+                $total_purchase = $this->input->post('total_purchase');
                 $amount = $this->input->post('amount');
                 $data = array();
                 $i = 0;
@@ -815,7 +821,9 @@ echo json_encode($json_data);  // send data as json format
                         'batch_no' => $batch_no[$i],
                         'quantity' => $quantity[$i],
                         'sale_price' => $sale_price[$i],
+                        'purchase_price'=>$purchase_price[$i],
                         'amount' => $amount[$i],
+                        'total_purchase' => $total_purchase[$i],
                     );
                     $available_quantity[$i] = $total_quantity[$i] - $quantity[$i];
                     $update_quantity = array(
@@ -1010,6 +1018,8 @@ echo json_encode($json_data);  // send data as json format
         $this->form_validation->set_rules('medicine_name[]', $this->lang->line('medicine') . " " . $this->lang->line('name'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('expire_date[]', $this->lang->line('expire') . " " . $this->lang->line('date'), 'required');
         $this->form_validation->set_rules('batch_no[]', $this->lang->line('batch') . " " . $this->lang->line('no'), 'required');
+        $this->form_validation->set_rules('customer_type',  $this->lang->line('patient') . " " . $this->lang->line('type'), 'required');
+
         $this->form_validation->set_rules('quantity[]', $this->lang->line('quantity'), 'required|numeric');
         $this->form_validation->set_rules('sale_price[]', $this->lang->line('sale_price'), 'required|numeric');
         $this->form_validation->set_rules('amount[]', $this->lang->line('amount'), 'required|numeric');
@@ -1021,6 +1031,7 @@ echo json_encode($json_data);  // send data as json format
                 'bill_no' => form_error('bill_no'),
                 'date' => form_error('date'),
                 'customer_name' => form_error('customer_name'),
+                'customer_type' => form_error('customer_type'),
                 'patient_id' => form_error('patient_id'),
                 'medicine_category_id' => form_error('medicine_category_id[]'),
                 'medicine_name' => form_error('medicine_name[]'),
@@ -1513,24 +1524,24 @@ public function stocktransfer(){
 
 
 public function stockpending(){
-        $this->form_validation->set_rules('pharmacy_id', $this->lang->line('pharmacy') . " " . $this->lang->line('id'), 'required');
+        $this->form_validation->set_rules('medicine_id', $this->lang->line('pharmacy') . " " . $this->lang->line('id'), 'required');
         $this->form_validation->set_rules('pending_qty', $this->lang->line('pending'). " " . $this->lang->line('quantity'), 'required');
         
         if ($this->form_validation->run() == FALSE) {
             $msg = array(
-                'pharmacy_id' => form_error('pharmacy_id'),
+                'medicine_id' => form_error('medicine_id'),
                 'pending_qty' => form_error('pending_qty'),
             );
             $array = array('status' => 'fail', 'error' => $msg, 'message' => '');
         } else {
-            $phar_id = $this->input->post('pharmacy_id');
+            $phar_id = $this->input->post('medicine_id');
             $pend_qty = $this->input->post('pending_qty');
             $available_qty = $this->pharmacy_model->getBatchIdQuantity($phar_id);
          
             $update_phar_stock = $available_qty['available_quantity']+$pend_qty;
             $update_temp_stock = $available_qty['temp_qty']-$pend_qty;
 
-            $update_data = array('id' => $this->input->post('pharmacy_id'), 'status' => 'approved', 'available_quantity' => $update_phar_stock, 'temp_qty' => $update_temp_stock);
+            $update_data = array('id' => $this->input->post('medicine_id'), 'status' => 'approved', 'available_quantity' => $update_phar_stock, 'temp_qty' => $update_temp_stock);
 
             $this->pharmacy_model->updateStockTransfer($update_data);
             $array = array('status' => 'success', 'error' => '', 'message' => $this->lang->line('success_message'));

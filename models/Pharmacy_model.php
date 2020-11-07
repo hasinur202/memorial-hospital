@@ -22,10 +22,6 @@ class Pharmacy_model extends CI_Model {
 
     public function search_datatable() {
 
-       /* $this->db->select('pharmacy.*,medicine_category.id as medicine_category_id,medicine_category.medicine_category,(SELECT sum(available_quantity) FROM `medicine_batch_details` WHERE pharmacy_id=pharmacy.id) as `total_qty`, (SELECT sum(stock) FROM `medicine_batch_details` WHERE pharmacy_id=pharmacy.id) as `main_stock`, (SELECT status FROM `medicine_batch_details` WHERE pharmacy_id=pharmacy.id) as status_p');
-        $this->db->join('medicine_category', 'pharmacy.medicine_category_id = medicine_category.id', 'left');
-        $this->db->where('`pharmacy`.`medicine_category_id`=`medicine_category`.`id`');  */
-
         $selectqQuery = "pharmacy.*,medicine_category.id as medicine_category_id,medicine_category.medicine_category, sum(medicine_batch_details.available_quantity) as `total_qty`, sum(medicine_batch_details.stock) as `main_stock`, medicine_batch_details.status as status_p, medicine_batch_details.medicine_category_id";
 
         $this->db->select($selectqQuery);
