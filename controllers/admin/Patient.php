@@ -353,6 +353,7 @@ class patient extends Admin_Controller {
         // }
 
         $this->form_validation->set_rules('name', $this->lang->line('name'), 'trim|required|xss_clean');
+        // $this->form_validation->set_rules('patient', $this->lang->line('type'), 'trim|required|xss_clean');
 
         $this->form_validation->set_rules('file', $this->lang->line('image'), 'callback_handle_upload');
 
@@ -398,6 +399,7 @@ class patient extends Admin_Controller {
                 'month' => $this->input->post('month'),
                 'dob' => $dob,
                 'is_active' => 'yes',
+                'patient_type' => $this->input->post('patient_type'),
                 'discharged' => 'no',
             );
             $insert_id = $this->patient_model->add_patient($patient_data);

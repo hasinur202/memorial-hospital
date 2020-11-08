@@ -47,7 +47,7 @@ class Radio_model extends CI_Model {
     }
 
     public function getBillDetails($id) {
-        $this->db->select('radiology_report.*,radio.test_name,radio.short_name,radio.report_days,patients.patient_name,staff.name as doctorname,staff.surname as doctorsurname');
+        $this->db->select('radiology_report.*,radio.test_name,radio.short_name,radio.report_days,patients.patient_name, patients.patient_type, staff.name as doctorname,staff.surname as doctorsurname');
         $this->db->where('radiology_report.id', $id);
         $this->db->join('radio', 'radio.id = radiology_report.radiology_id');
         $this->db->join('patients', 'patients.id = radiology_report.patient_id');
@@ -103,7 +103,7 @@ class Radio_model extends CI_Model {
     }
 
     public function getTestReportBatch($radiology_id) {
-        $this->db->select('radiology_report.*, radio.id as rid,radio.test_name, radio.short_name,staff.name,staff.surname,charges.id as cid,charges.charge_category,charges.standard_charge,patients.patient_name');
+        $this->db->select('radiology_report.*, radio.id as rid,radio.test_name, radio.short_name,staff.name,staff.surname,charges.id as cid,charges.charge_category,charges.standard_charge,patients.patient_name,patients.patient_type');
         $this->db->join('radio', 'radiology_report.radiology_id = radio.id', 'inner');
         $this->db->join('staff', 'staff.id = radiology_report.consultant_doctor', "left");
         $this->db->join('charges', 'charges.id = radio.charge_id');
@@ -125,7 +125,7 @@ class Radio_model extends CI_Model {
     }
 
     public function getTestReportBatchRadio($patient_id) {
-        $this->db->select('radiology_report.*, radio.id as rid,radio.test_name, radio.short_name,staff.name,staff.surname,charges.id as cid,charges.charge_category,charges.standard_charge,patients.patient_name');
+        $this->db->select('radiology_report.*, radio.id as rid,radio.test_name, radio.short_name,staff.name,staff.surname,charges.id as cid,charges.charge_category,charges.standard_charge,patients.patient_name,patients.patient_type');
         $this->db->join('radio', 'radiology_report.radiology_id = radio.id', 'inner');
         $this->db->join('staff', 'staff.id = radiology_report.consultant_doctor', "left");
         $this->db->join('charges', 'charges.id = radio.charge_id');

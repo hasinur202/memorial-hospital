@@ -153,6 +153,7 @@ $genderList = $this->customlib->getGender();
                         <div class="col-lg-12 col-md-12 col-sm-12">
 
                             <input name="customer_name" id="patient_name" type="hidden" class="form-control"/>
+                            <input name="customer_type" id="patient_type" type="hidden" class="form-control"/>
                             <input name="date" id="date_result" type="hidden" class="form-control"/>
                             <input name="patient_id" id="patient_id" type="hidden" class="form-control"/>
                             <input name="bill_no" id="billnoform" type="hidden" class="form-control"/>
@@ -291,7 +292,7 @@ $genderList = $this->customlib->getGender();
                                                             </div>   
                                                         </div> 
 
-                                                    <div class="col-sm-6">   
+                                                   <!--  <div class="col-sm-6">   
                                                         <div class="form-group">
                                                         <label style="font-weight: bold;"><?php echo $this->lang->line('customer') . " " . $this->lang->line('type'); ?><small class="req" style="color:red;"> *</small>
                                                         </label>
@@ -302,9 +303,18 @@ $genderList = $this->customlib->getGender();
                                                             <option value="IPD">IPD</option>      
                                                         </select> 
                                                     </div>
+                                                    </div> -->
+
+                                                    <div class="col-sm-6">   
+                                                        <div class="form-group">
+                                                        <label><?php echo $this->lang->line('doctor') . " " . $this->lang->line('name'); ?>
+                                                        </label>
+
+                                                    <input name="doctor_name" id="doctname" type="text" class="form-control"/>
+
+                                                    </div>
                                                     </div>
 
-                                                    <input name="doctor_name" id="doctname" type="hidden" class="form-control"/>
 
                                                     </div>  
                                                 </div>  
@@ -568,6 +578,7 @@ $genderList = $this->customlib->getGender();
                 // console.log(res);
                 if (res) {
                     $('#patient_name').val(res.patient_name);
+                    $('#patient_type').val(res.patient_type);
                     $('#patient_id').val(res.id);
                 } else {
                     $('#patient_name').val('Null');

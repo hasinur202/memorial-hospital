@@ -25,6 +25,8 @@ $genderList = $this->customlib->getGender();
                                     <th><?php echo $this->lang->line('bill') . " " . $this->lang->line('no'); ?></th>
                                     <th><?php echo $this->lang->line('reporting') . " " . $this->lang->line('date'); ?></th>
                                     <th><?php echo $this->lang->line('patient') . " " . $this->lang->line('name'); ?></th>
+                                    <th><?php echo $this->lang->line('patient') . " " . $this->lang->line('type'); ?></th>
+
                                                                         <!--<th><?php echo $this->lang->line('patient') . " " . $this->lang->line('id'); ?></th>-->
                                     <th><?php echo $this->lang->line('test') . " " . $this->lang->line('name'); ?></th>
                                     <th><?php echo $this->lang->line('short') . " " . $this->lang->line('name'); ?></th>
@@ -50,6 +52,7 @@ $genderList = $this->customlib->getGender();
                                             <td><?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($detail->reporting_date));
                                         ?> </td>
                                             <td><?php echo $detail->patient_name; ?></td>
+                                            <td><?php echo $detail->patient_type; ?></td>
                                                                                         <!--<td><?php echo $detail->unique_id; ?></td>-->
                                             <td><?php echo $detail->test_name; ?></td>
                                             <td><?php echo $detail->short_name; ?></td>

@@ -493,6 +493,8 @@ $genderList = $this->customlib->getGender();
                                     <div class="row ptt10" id="patientDetails" style="display:none">
                                         <input type="hidden" name="pathology_id" id="patho_id" >
                                         <input type="hidden" name="patient_id" id="patho_patientid" >
+                                        <input type="hidden" name="customer_type" id="patho_patienttype" >
+                                        <input type="hidden" name="patient_name" id="patho_patient_name" >
                                         <div class="col-md-9 col-sm-9 col-xs-9">
 
                                             <ul class="singlelist">
@@ -942,10 +944,13 @@ $genderList = $this->customlib->getGender();
                     $("#ajax_load").html("");
                     $("#patientDetails").show();
                     //  $("#patientDetails").html("<center><img src='"+base_url+"'backend/images/loading.gif/></center>");
+                    $('#patho_patient_name').val(res.patient_name);
+                    $('#patho_patienttype').val(res.patient_type);
 
                     $('#patient_unique_id').html(res.patient_unique_id);
                     $('#patho_patientid').val(res.id);
                     $('#listname').html(res.patient_name);
+                    // $('#patho_patienttype').html(res.patient_type);
                     $('#guardian').html(res.guardian_name);
                     $('#listnumber').html(res.mobileno);
                     $('#email').html(res.email);
@@ -1114,6 +1119,7 @@ $genderList = $this->customlib->getGender();
     function getPatientIdName(opd_ipd_no) {
         $('#patient_id').val("");
         $('#patient_name').val("");
+        // $('#patient_type').val("");
         var opd_ipd_patient_type = $("#customer_type").val();
         $.ajax({
             url: '<?php echo base_url(); ?>admin/patient/getPatientType',
@@ -1123,6 +1129,8 @@ $genderList = $this->customlib->getGender();
             success: function (data) {
                 $('#patient_id').val(data.patient_id);
                 $('#patient_name').val(data.patient_name);
+                // $('#patient_type').val(data.patient_type);
+
                 //$('#consultant_doctor').val(data.doctorname + ' ' +data.surname);
             }
         });

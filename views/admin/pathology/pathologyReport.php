@@ -87,7 +87,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                             <?php echo $this->customlib->getCSRF(); ?>
 
-                            <div class="col-sm-6 col-md-4" >
+                            <div class="col-sm-6 col-md-3" >
                                 <div class="form-group">
                                     <label><?php echo $this->lang->line('search') . " " . $this->lang->line('type'); ?></label>
                                     <select class="form-control" name="search_type" onchange="showdate(this.value)">
@@ -104,20 +104,37 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                     <span class="text-danger"><?php echo form_error('search_type'); ?></span>
                                 </div>
                             </div>
-                            <div class="col-sm-6 col-md-4" id="fromdate" style="display: none">
+                            <div class="col-sm-6 col-md-3" id="fromdate" style="display: none">
                                 <div class="form-group">
                                     <label><?php echo $this->lang->line('date_from'); ?></label><small class="req"> *</small>
                                     <input id="date_from" name="date_from" placeholder="" type="text" class="form-control date" value="<?php echo set_value('date_from', date($this->customlib->getSchoolDateFormat())); ?>"  />
                                     <span class="text-danger"><?php echo form_error('date_from'); ?></span>
                                 </div>
                             </div> 
-                            <div class="col-sm-6 col-md-4" id="todate" style="display: none">
+                            <div class="col-sm-6 col-md-3" id="todate" style="display: none">
                                 <div class="form-group">
                                     <label><?php echo $this->lang->line('date_to'); ?></label><small class="req"> *</small>
                                     <input id="date_to" name="date_to" placeholder="" type="text" class="form-control date" value="<?php echo set_value('date_to', date($this->customlib->getSchoolDateFormat())); ?>"  />
                                     <span class="text-danger"><?php echo form_error('date_to'); ?></span>
                                 </div>
                             </div> 
+
+                            <div class="col-sm-6 col-md-3" >
+                                <div class="form-group">
+                                    <label><?php echo $this->lang->line('patient') . " " . $this->lang->line('type'); ?></label>
+                                    <small class="req"> *</small>
+                                    <select class="form-control" name="patient_type">
+
+                                        <option selected="selected" disabled value=""><?php echo $this->lang->line('select') . " " . $this->lang->line('patient') . " " . $this->lang->line('type');?></option>
+                                        <option value="all"><?php echo $this->lang->line('all') ?></option>
+                                        <option value="opd"><?php echo $this->lang->line('opd') ?></option>
+                                        <option value="ipd"><?php echo $this->lang->line('ipd') ?></option>
+                                       
+                                    </select>
+                                    <span class="text-danger"><?php echo form_error('patient_type'); ?></span>
+                                </div>
+                            </div>
+
                             <div class="form-group">
                                 <div class="col-sm-12">
                                     <button type="submit" name="search" value="search_filter" class="btn btn-primary btn-sm checkbox-toggle pull-right"><i class="fa fa-search"></i> <?php echo $this->lang->line('search'); ?></button>
@@ -136,6 +153,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         <th><?php echo $this->lang->line('date'); ?></th>
                                         <th><?php echo $this->lang->line('test') . " " . $this->lang->line('name'); ?></th>
                                         <th><?php echo $this->lang->line('patient') . " " . $this->lang->line('name'); ?></th>
+                                        <th><?php echo $this->lang->line('patient') . " " . $this->lang->line('type'); ?></th>
                                         <th><?php echo $this->lang->line('description'); ?></th>
                                         <th><?php echo $this->lang->line('consultant') . " " . $this->lang->line('doctor'); ?></th>
                                         <th><?php echo $this->lang->line('charge') . " " . $this->lang->line('category'); ?></th>
@@ -162,8 +180,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             ?>
                                                 </td>
                                                 <td><?php echo $report['short_name']; ?></td>
-                                                <td><?php echo $report['patient_name']; ?>
-                                                </td> 
+                                                <td><?php echo $report['patient_name']; ?> </td> 
+                                                <td><?php echo $report['patient_type']; ?> </td> 
                                                 <td><?php echo $report['description']; ?></td>
                                                 <td><?php echo $report['name'] . " " . $report['surname']; ?></td>
                                                 <td><?php echo $report['charge_category']; ?></td>
@@ -176,7 +194,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         ?>
                                     </tbody>
                                     <tr class="box box-solid total-bg">
-                                        <td colspan='7' class="text-right"><?php echo $this->lang->line('total') . " : " . $currency_symbol . $total; ?>
+                                        <td colspan='8' class="text-right"><?php echo $this->lang->line('total') . " : " . $currency_symbol . $total; ?>
                                         </td>
                                     </tr> 
                                 <?php } ?>

@@ -32,7 +32,7 @@ class Pathology_model extends CI_Model {
     }
 
     public function getBillDetails($id) {
-        $this->db->select('pathology_report.*,pathology.test_name,pathology.short_name,pathology.report_days,patients.patient_name,staff.name as doctorname,staff.surname as doctorsurname');
+        $this->db->select('pathology_report.*,pathology.test_name,pathology.short_name,pathology.report_days,patients.patient_name,patients.patient_type, staff.name as doctorname,staff.surname as doctorsurname');
         $this->db->where('pathology_report.id', $id);
         $this->db->join('pathology', 'pathology.id = pathology_report.pathology_id');
         $this->db->join('patients', 'patients.id = pathology_report.patient_id');
@@ -81,7 +81,7 @@ class Pathology_model extends CI_Model {
     }
 
     public function getPathologyReport($id) {
-        $query = $this->db->select('pathology_report.*,pathology.id as pid,pathology.charge_id as cid,staff.name,staff.surname,charges.charge_category,charges.code,charges.standard_charge,patients.patient_name')
+        $query = $this->db->select('pathology_report.*,pathology.id as pid,pathology.charge_id as cid,staff.name,staff.surname,charges.charge_category,charges.code,charges.standard_charge,patients.patient_name,patients.patient_type')
                 ->join('patients', 'pathology_report.patient_id = patients.id')
                 ->join('pathology', 'pathology_report.pathology_id = pathology.id')
                 ->join('charges', 'pathology.charge_id = charges.id')
@@ -105,7 +105,7 @@ class Pathology_model extends CI_Model {
     }
 
     public function getTestReportBatch($pathology_id) {
-        $this->db->select('pathology_report.*, pathology.id as pid,pathology.test_name,pathology.short_name,staff.name,staff.surname,charges.id as cid,charges.charge_category,charges.standard_charge,patients.patient_name');
+        $this->db->select('pathology_report.*, pathology.id as pid,pathology.test_name,pathology.short_name,staff.name,staff.surname,charges.id as cid,charges.charge_category,charges.standard_charge,patients.patient_name,patients.patient_type');
         $this->db->join('pathology', 'pathology_report.pathology_id = pathology.id', 'inner');
         $this->db->join('staff', 'staff.id = pathology_report.consultant_doctor', "left");
         $this->db->join('charges', 'charges.id = pathology.charge_id');
@@ -128,7 +128,7 @@ class Pathology_model extends CI_Model {
     }
 
    public function getTestReportBatchPatho($patient_id) {
-        $this->db->select('pathology_report.*, pathology.id as pid,pathology.test_name,pathology.short_name,staff.name,staff.surname,charges.id as cid,charges.charge_category,charges.standard_charge,patients.patient_name');
+        $this->db->select('pathology_report.*, pathology.id as pid,pathology.test_name,pathology.short_name,staff.name,staff.surname,charges.id as cid,charges.charge_category,charges.standard_charge,patients.patient_name, patients.patient_type');
         $this->db->join('pathology', 'pathology_report.pathology_id = pathology.id', 'inner');
         $this->db->join('staff', 'staff.id = pathology_report.consultant_doctor', "left");
         $this->db->join('charges', 'charges.id = pathology.charge_id');

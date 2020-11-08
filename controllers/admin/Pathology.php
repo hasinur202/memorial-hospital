@@ -67,67 +67,6 @@ class Pathology extends Admin_Controller {
         echo json_encode($array);
     }
 
-    public function addpatient() {
-        if (!$this->rbac->hasPrivilege('patient', 'can_add')) {
-            access_denied();
-        }
-
-        $this->form_validation->set_rules('name', $this->lang->line('name'), 'trim|required|xss_clean');
-
-
-        if ($this->form_validation->run() == FALSE) {
-            $msg = array(
-                'name' => form_error('name'),
-            );
-            $array = array('status' => 'fail', 'error' => $msg, 'message' => '');
-        } else {
-            $check_patient_id = $this->patient_model->getMaxId();
-
-            if (empty($check_patient_id)) {
-                $check_patient_id = 1000;
-            }
-
-            $patient_id = $check_patient_id + 1;
-
-
-            $patient_data = array(
-                'patient_name' => $this->input->post('name'),
-                'mobileno' => $this->input->post('contact'),
-                'marital_status' => $this->input->post('marital_status'),
-                'email' => $this->input->post('email'),
-                'gender' => $this->input->post('gender'),
-                'guardian_name' => $this->input->post('guardian_name'),
-                'blood_group' => $this->input->post('blood_group'),
-                'address' => $this->input->post('address'),
-                'known_allergies' => $this->input->post('known_allergies'),
-                'patient_unique_id' => $patient_id,
-                'note' => $this->input->post('note'),
-                'age' => $this->input->post('age'),
-                'month' => $this->input->post('month'),
-                'is_active' => 'yes',
-            );
-            $insert_id = $this->patient_model->add_patient($patient_data);
-
-            $user_password = $this->role->get_random_password($chars_min = 6, $chars_max = 6, $use_upper_case = false, $include_numbers = true, $include_special_chars = false);
-            $data_patient_login = array(
-                'username' => $this->patient_login_prefix . $insert_id,
-                'password' => $user_password,
-                'user_id' => $insert_id,
-                'role' => 'patient'
-            );
-            $this->user_model->add($data_patient_login);
-            $array = array('status' => 'success', 'error' => '', 'message' => $this->lang->line('success_message'));
-            if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
-                $fileInfo = pathinfo($_FILES["file"]["name"]);
-                $img_name = $insert_id . '.' . $fileInfo['extension'];
-                move_uploaded_file($_FILES["file"]["tmp_name"], "./uploads/patient_images/" . $img_name);
-                $data_img = array('id' => $insert_id, 'image' => 'uploads/patient_images/' . $img_name);
-                $this->patient_model->add($data_img);
-            }
-        }
-        echo json_encode($array);
-    }
-
     public function search() {
         if (!$this->rbac->hasPrivilege('pathology test', 'can_view')) {
             access_denied();
@@ -458,7 +397,7 @@ class Pathology extends Admin_Controller {
         }
         $this->session->set_userdata('top_menu', 'Reports');
         $this->session->set_userdata('sub_menu', 'admin/pathology/pathologyreport');
-        $select = 'pathology_report.*, pathology.id, pathology.short_name,staff.name,staff.surname,charges.id as cid,charges.charge_category,charges.standard_charge,patients.patient_name';
+        $select = 'pathology_report.*, pathology.id, pathology.short_name,staff.name,staff.surname,charges.id as cid,charges.charge_category,charges.standard_charge,patients.patient_name, patients.patient_type';
         $join = array(
             'JOIN pathology ON pathology_report.pathology_id = pathology.id',
             'JOIN staff ON pathology_report.consultant_doctor = staff.id',
@@ -467,19 +406,29 @@ class Pathology extends Admin_Controller {
         $table_name = "pathology_report";
 
         $search_type = $this->input->post("search_type");
-        if (isset($search_type)) {
+        $patient_type = $this->input->post("patient_type");
+
+        if (isset($search_type) || isset($patient_type)) {
             $search_type = $this->input->post("search_type");
+            $patient_type = $this->input->post("patient_type");
+
         } else {
             $search_type = "this_month";
         }
         if (empty($search_type)) {
             $search_type = "";
+            $patient_type = "";
             $resultlist = $this->report_model->getReport($select, $join, $table_name);
+            // $resultlist = $this->report_model->getReport($select, $join = array(), $table_name, $where = array());
+
         } else {
 
             $search_table = "pathology_report";
+            // $patient_table = "patients";
             $search_column = "reporting_date";
-            $resultlist = $this->report_model->searchReport($select, $join, $table_name, $search_type, $search_table, $search_column);
+            $patient_column = "customer_type";
+
+            $resultlist = $this->report_model->searchPharmacyReport($select, $join, $table_name, $search_type, $patient_type, $search_table, $search_column, $patient_column, $where = array());
         }
 
         $data["searchlist"] = $this->search_type;

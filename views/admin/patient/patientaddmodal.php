@@ -24,12 +24,43 @@ $bloodgroup = $this->config->item('bloodgroup');
                                             <span class="text-danger"><?php echo form_error('name'); ?></span>
                                         </div>
                                     </div>
+
                                     <div class="col-sm-6">
                                         <div class="form-group">
                                             <label><?php echo $this->lang->line('guardian_name') ?></label>
                                             <input type="text" name="guardian_name" placeholder="" value="" class="form-control">
                                         </div>
                                     </div>
+
+                                    <div class="col-sm-3">   
+                                        <div class="form-group">
+                                            <label><?php echo $this->lang->line('patient') . " " . $this->lang->line('type'); ?><small class="req" style="color:red;"> *</small>
+                                            </label>
+                                            <select name="patient_type" style="width: 100%" class="form-control select2">
+                                                <option value=""><?php echo $this->lang->line('select') . " " . $this->lang->line('patient'). " " . $this->lang->line('type') ?></option>
+                                                <option value="OPD">OPD</option>
+                                                <option value="IPD">IPD</option>      
+                                            </select> 
+                                        </div>
+                                    </div>
+
+
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                <label><?php echo $this->lang->line('blood_group'); ?></label>
+                                                <select name="blood_group"  class="form-control" >
+                                                    <option value=""><?php echo $this->lang->line('select') ?></option>
+                                                    <?php
+                                                    foreach ($bloodgroup as $key => $value) {
+                                                        ?>
+                                                        <option value="<?php echo $value; ?>" <?php if (set_value('blood_group') == $key) echo "selected"; ?>><?php echo $value; ?></option>
+                                                        <?php
+                                                    }
+                                                    ?>
+                                                </select>   
+                                            </div>
+                                        </div>
+
 
                                     <div class="col-md-6 col-sm-12">  
                                         <div class="row">  
@@ -68,24 +99,8 @@ $bloodgroup = $this->config->item('bloodgroup');
                                         </div>  
                                     </div><!--./col-md-6-->  
                                     <div class="col-md-6 col-sm-12"> 
-                                        <div class="row"> 
-                                            <div class="col-sm-3">
-                                                <div class="form-group">
-                                                    <label><?php echo $this->lang->line('blood_group'); ?></label>
-                                                    <select name="blood_group"  class="form-control" >
-                                                        <option value=""><?php echo $this->lang->line('select') ?></option>
-                                                        <?php
-                                                        foreach ($bloodgroup as $key => $value) {
-                                                            ?>
-                                                            <option value="<?php echo $value; ?>" <?php if (set_value('blood_group') == $key) echo "selected"; ?>><?php echo $value; ?></option>
-                                                            <?php
-                                                        }
-                                                        ?>
-                                                    </select>   
-                                                </div>
-                                            </div>
-
-                                            <div class="col-sm-3">
+                                        <div class="row">
+                                            <div class="col-sm-4">
                                                 <div class="form-group">
                                                     <label for="pwd"><?php echo $this->lang->line('marital_status'); ?></label>
                                                     <select name="marital_status" class="form-control">
@@ -96,30 +111,31 @@ $bloodgroup = $this->config->item('bloodgroup');
                                                         <?php } ?>
                                                     </select>
                                                 </div>
+                                            </div> 
+
+                                            <div class="col-sm-8">
+                                                <div class="form-group">
+                                                    <label for="pwd"><?php echo $this->lang->line('phone'); ?></label>
+                                                    <input id="number" autocomplete="off" name="mobileno"  type="text" placeholder="" class="form-control"  value="<?php echo set_value('mobileno'); ?>" />
+                                                </div>
                                             </div>   
 
-                                            <div class="col-sm-6">
-                                                <div class="form-group">
-                                                    <label for="exampleInputFile">
-                                                        <?php echo $this->lang->line('patient') . " " . $this->lang->line('photo'); ?>
-                                                    </label>
-                                                    <div><input class="filestyle form-control" type='file' name='file' id="file" size='20' data-height="26" />
-                                                    </div>
-                                                    <span class="text-danger"><?php echo form_error('file'); ?></span>
-                                                </div>
-                                            </div> 
                                         </div> 
                                     </div><!--./col-md-6-->      
 
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="exampleInputFile">
+                                                    <?php echo $this->lang->line('patient') . " " . $this->lang->line('photo'); ?>
+                                                </label>
+                                                <div><input class="filestyle form-control" type='file' name='file' id="file" size='20' data-height="26" />
+                                                </div>
+                                                <span class="text-danger"><?php echo form_error('file'); ?></span>
+                                            </div>
+                                        </div> 
 
-                                    <div class="col-sm-3">
-                                        <div class="form-group">
-                                            <label for="pwd"><?php echo $this->lang->line('phone'); ?></label>
-                                            <input id="number" autocomplete="off" name="mobileno"  type="text" placeholder="" class="form-control"  value="<?php echo set_value('mobileno'); ?>" />
-                                        </div>
-                                    </div> 
 
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-6">
                                         <div class="form-group">
                                             <label><?php echo $this->lang->line('email'); ?></label>
                                             <input type="text" placeholder="" id="addformemail" value="<?php echo set_value('email'); ?>" name="email" class="form-control">
